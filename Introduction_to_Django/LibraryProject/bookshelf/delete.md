@@ -1,1 +1,2 @@
-Book.objects.del(title="1984")
+book.delete(title="1984")
+from bookself.models import Book
