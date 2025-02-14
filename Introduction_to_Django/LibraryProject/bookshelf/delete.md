@@ -1,0 +1,1 @@
+Book.objects.del(title="1984")
