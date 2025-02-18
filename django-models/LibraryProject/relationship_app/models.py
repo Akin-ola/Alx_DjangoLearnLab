@@ -15,7 +15,7 @@ class Book(models.Model):
 
 """Library model."""
 class Library(models.Model):
-    name = models.CharField(max_length=50)
+    library_name = models.CharField(max_length=50)
     books = models.ManyToManyField(Book, related_name="libraries")
 
 """ Librarian model."""
