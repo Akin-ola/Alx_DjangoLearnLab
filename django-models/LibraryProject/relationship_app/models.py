@@ -2,26 +2,26 @@ from django.db import models
 
 """ Author model."""
 class Author(models.Model):
-    name = models.CharField(max_length=100)
+    author_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.author_name
     
 
 """ Book model."""
 class Book(models.Model):
-    title = models.CharField(max_length=50)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+    book_title = models.CharField(max_length=50)
+    author_name = models.ForeignKey(Author, on_delete=models.CASCADE)
 
 """Library model."""
 class Library(models.Model):
     library_name = models.CharField(max_length=50)
-    books = models.ManyToManyField(Book, related_name="libraries")
+    book_title = models.ManyToManyField(Book, related_name="library")
 
 """ Librarian model."""
 class Librarian(models.Model):
-    name = models.CharField(max_length=50)
-    library = models.OneToOneField(Library, on_delete=models.CASCADE)
+    librarian_name = models.CharField(max_length=50)
+    library_name = models.OneToOneField(Library, on_delete=models.CASCADE)
 
 
 
