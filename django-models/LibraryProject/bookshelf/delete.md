@@ -1,0 +1,1 @@
+book.delete(title="1984" from bookshelf.models import Book)
