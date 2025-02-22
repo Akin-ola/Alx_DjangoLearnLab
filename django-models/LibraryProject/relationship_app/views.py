@@ -20,7 +20,8 @@ class LibraryDetailView(DetailView):
         context = self.get_object()
         context['librarian'] = library.get_librarian()
 
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
@@ -29,11 +30,8 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('Login')
     template_name = 'relationship_app/register.html'
 
-class LoginView(CreateView):
+class LoginView(login):
     template_name = 'relationship_app/login.html'
-    next_page = reverse_lazy('Login')
-    form_class = AuthenticationForm
 
-class LogoutView(CreateView):
+class LogoutView(logout):
     template_name = 'relationship_app/logout.html'
-    form_class = AuthenticationForm
