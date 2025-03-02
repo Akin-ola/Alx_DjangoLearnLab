@@ -4,6 +4,7 @@ from .models import Book
 from django.views.generic import ListView
 from django.views.generic import CreateView
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 
