@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from .models import Library
 from .models import Book
 from django.views.generic import ListView
@@ -8,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import permission_required, user_passes_test
 
 
 
@@ -30,8 +32,6 @@ class LibraryDetailView(ListView):
         
 
 
-
-
 class LoginView(LoginView):
     """"""
 
@@ -42,3 +42,16 @@ class User_register(CreateView):
     form_class = UserCreationForm()
     success_url = reverse_lazy(LoginView)
     template_name = "relationship_app/register.html"
+
+
+@user_passes_test(Admin=True)
+def Admin_view(request):
+    return HttpResponse("This user is an Admin")
+
+@user_passes_test(Librarian=True)
+def Librarian_view(request):
+    return HttpResponse("This user is a Librarian")
+
+@user_passes_test(Member=True)
+def Member_view(request):
+    return HttpResponse("This user is a member")
