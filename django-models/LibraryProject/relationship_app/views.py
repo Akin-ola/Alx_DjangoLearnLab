@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from .models import Library
-from django.views.generic.detail import DetailView
 from .models import Book
+from django.views.generic import ListView
+from django.views.generic import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView, LogoutView
+
+
 
 # Create your views here.
 def list_books(request):
@@ -10,30 +16,27 @@ def list_books(request):
     return render(request, "relationship_app/list_books.html", context) 
 
 
-class LibraryDetailView(DetailView):
-    
+class LibraryDetailView(ListView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
+    
 
-    def get_context_data(self):
-        # context = super().get_context_data()
-        context = self.get_object()
-        context['librarian'] = library.get_librarian()
+    # def library(self, request):
+    #     library = self.get_queryset(Library.objects.all())
+    #     context = {"library_details" : library} 
+    #     return render(request, "relationship_app/library_detail.html", context)
+        
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
 
-class RegisterView(CreateView):
-    form_class = UserCreationForm()
-    success_url = reverse_lazy('Login')
-    template_name = 'relationship_app/register.html'
 
-class LoginView(CreateView):
-    model = login
+
+class User_login(LoginView):
     template_name = "relationship_app/login.html"
 
-class LogoutView(CreateView):
-    model = logout
+class User_logout(LogoutView): 
     template_name = "relationship_app/logout.html"
+
+class User_register(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy(User_login)
+    template_name = "relationship_app/register.html"
