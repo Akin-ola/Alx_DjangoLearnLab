@@ -17,7 +17,7 @@ class Book(models.Model):
         return f"{self.title} by {self.author}"
     
     class Meta:
-        Permission = [
+        Permissions = [
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book")
