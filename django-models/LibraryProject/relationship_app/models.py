@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User 
+from django.contrib.auth.models import Permission
 
 """ Author model."""
 class Author(models.Model):
@@ -16,8 +17,8 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author}"
     
-    class Meta:
-        Permissions = [
+    class Meta(Permission):
+        Permissions=[
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book")
