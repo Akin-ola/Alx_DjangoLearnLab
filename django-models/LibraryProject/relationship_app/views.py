@@ -45,13 +45,13 @@ class User_register(CreateView):
 
 
 @user_passes_test(UserProfile.role_choices("Admin"))
-def Admin_view(request):
+def admin_view(request):
     return HttpResponse("This user is an Admin")
 
 @user_passes_test(UserProfile.role_choices("Librarian"))
-def Librarian_view(request):
+def librarian_view(request):
     return HttpResponse("This user is a Librarian")
 
 @user_passes_test(UserProfile.role_choices("Member"))
-def Member_view(request):
+def member_view(request):
     return HttpResponse("This user is a member")
