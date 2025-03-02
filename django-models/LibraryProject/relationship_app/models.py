@@ -27,12 +27,13 @@ class Librarian(models.Model):
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
 
-role_choices = [
-    ("Admin"),
-    ("Librarian"),
-    ("Member")
-]
+
 class UserProfile(models.Model):
+    role_choices = [
+    ("Admin", "Admin"),
+    ("Librarian", "Librarian"),
+    ("Member", "Member")
+]
     role = models.CharField(choices= role_choices, blank=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
  

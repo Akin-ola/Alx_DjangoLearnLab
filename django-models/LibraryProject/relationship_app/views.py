@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Library
+from .models import Library, UserProfile
 from .models import Book
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
@@ -44,14 +44,14 @@ class User_register(CreateView):
     template_name = "relationship_app/register.html"
 
 
-@user_passes_test(Admin=True)
+@user_passes_test(UserProfile.role_choices("Admin"))
 def Admin_view(request):
     return HttpResponse("This user is an Admin")
 
-@user_passes_test(Librarian=True)
+@user_passes_test(UserProfile.role_choices("Librarian"))
 def Librarian_view(request):
     return HttpResponse("This user is a Librarian")
 
-@user_passes_test(Member=True)
+@user_passes_test(UserProfile.role_choices("Member"))
 def Member_view(request):
     return HttpResponse("This user is a member")
