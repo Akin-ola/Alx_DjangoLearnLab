@@ -11,9 +11,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import permission_required, user_passes_test
 
-
-
-@permission_required(perm=True)
+@permission_required("relationship_app.can_add_book")
+@permission_required("relationship_app.can_change_book")
+@permission_required("relationship_app.can_delete_book")
 def list_books(request):
     books = Book.objects.all()
     context = {'book_list': books}
@@ -55,3 +55,4 @@ def librarian_view(request):
 @user_passes_test(UserProfile.role_choices("Member"))
 def member_view(request):
     return HttpResponse("This user is a member")
+
