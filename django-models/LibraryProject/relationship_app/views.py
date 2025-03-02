@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import permission_required, user_passes_test
 
 
 
-# Create your views here.
+@permission_required(perm=True)
 def list_books(request):
     books = Book.objects.all()
     context = {'book_list': books}
