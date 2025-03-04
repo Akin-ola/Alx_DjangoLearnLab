@@ -1,16 +1,28 @@
 from django.urls import path
-from .views import list_books, admin_view, librarian_view, member_view
-from .views import User_register, LoginView, LogoutView
 from .views import LibraryDetailView
+from django.contrib.auth import views as auth_views
+from . import views
 
 urlpatterns = [
-    path("", view=list_books, name="home"),
-    path("", LibraryDetailView.as_view(), name="library_details"),
-    path("", User_register.as_view(), name="views.register"),
-    path("", LoginView.as_view(template_name= "relationship_app/login.html"), name="login"),
-    path("", LogoutView.as_view(template_name= "relationship_app/login.html"), name="logout"),
-    path("", view=admin_view, name="Admin"),
-    path("", view=librarian_view, name="Librarian"),
-    path("", view=member_view, name="Member"),
-    path("", view="add_book/ edit_book/ delete_book")
+
+     # URL pattern for the function-based view (list_books)
+    path("book_list", views.list_books, name="book_list"),
+
+     # URL pattern for the class-based view (LibraryDetailView)
+    path("library_details", LibraryDetailView.as_view(), name="library_details"),
+
+     # Authentication URLs
+    path("login/", auth_views.LoginView.as_view(template_name="relationship_app/login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(template_name="relationship_app/logout.html"), name="logout"),
+    path("register/", views.register, name="register"),
+
+     # Authenticated user views
+    path("admin-view/", views.admin_view, name="admin_view"),
+    path("librarian-view/", views.librarian_view, name="librarian_view"),
+    path("member-view/", views.member_view, name="member_view"),
+
+     # Secured URLs
+    path("add_book/", views.add_book, name="add_book"),
+    path("edit_book/<int:pk>/", views.edit_book, name="edit_book"),
+    path("delete_book/<int:pk>/", views.delete_book, name="delete_book")
 ]

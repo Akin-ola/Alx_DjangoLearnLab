@@ -1,58 +1,104 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Library, UserProfile
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Library
 from .models import Book
-from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic import CreateView
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
-from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.decorators import permission_required, user_passes_test
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import permission_required, user_passes_test, login_required
+from django.contrib import messages
+from django.forms import BookForm
 
-@permission_required("relationship_app.can_add_book")
-@permission_required("relationship_app.can_change_book")
-@permission_required("relationship_app.can_delete_book")
+
+# Define a book list view with a simple function view
 def list_books(request):
     books = Book.objects.all()
     context = {'book_list': books}
     return render(request, "relationship_app/list_books.html", context) 
 
-
-class LibraryDetailView(ListView):
-    model = Library
-    template_name = 'relationship_app/library_detail.html'
+# Define a Library detail view with a class view
+class LibraryDetailView(DetailView):
+    model = Library   #Specify the model
+    name = "library"
+    template_name = 'relationship_app/library_detail.html'    #Specify the template
     
 
-    # def library(self, request):
-    #     library = self.get_queryset(Library.objects.all())
-    #     context = {"library_details" : library} 
-    #     return render(request, "relationship_app/library_detail.html", context)
-        
+# Need serious explanations
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()  # Save the user
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=raw_password)
+            if user is not None:
+                login(request, user)  # Log the user in
+                messages.success(request, f'Account created for {username}!')
+                return redirect('list_books')  # Redirect to a desired page after registration
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 
-class LoginView(LoginView):
-    """"""
+# Role-checking functions
+def is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
-class LogoutView(LogoutView): 
-    """"""
+def is_librarian(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
 
-class User_register(CreateView):
-    form_class = UserCreationForm()
-    success_url = reverse_lazy(LoginView)
-    template_name = "relationship_app/register.html"
+def is_member(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
 
-@user_passes_test(UserProfile.role_choices("Admin"))
+# Admin view
+@login_required
+@user_passes_test(is_admin)
 def admin_view(request):
-    return HttpResponse("This user is an Admin")
+    return render(request, "relationship_app/admin_view.html")  # Ensure this path is present
 
-@user_passes_test(UserProfile.role_choices("Librarian"))
+# Librarian view
+@login_required
+@user_passes_test(is_librarian)
 def librarian_view(request):
-    return HttpResponse("This user is a Librarian")
+    return render(request, "relationship_app/librarian_view.html")  # Ensure this path is present
 
-@user_passes_test(UserProfile.role_choices("Member"))
+# Member view
+@login_required
+@user_passes_test(is_member)
 def member_view(request):
-    return HttpResponse("This user is a member")
+    return render(request, "relationship_app/member_view.html")  # Ensure this path is present
 
+# View to add a book
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books')
+    else:
+        form = BookForm()
+    return render(request, 'relationship_app/add_book.html', {'form': form})
+
+# View to edit a book
+@permission_required('relationship_app.can_change_book')
+def edit_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'relationship_app/edit_book.html', {'form': form})
+
+# View to delete a book
+@permission_required('relationship_app.can_delete_book')
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('list_books')
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
