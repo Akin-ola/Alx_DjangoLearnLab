@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User 
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import User, AbstractUser, BaseUserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 """ Author model."""
 class Author(models.Model):
@@ -8,7 +10,8 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 """ Book model."""
 class Book(models.Model):
     title = models.CharField(max_length=50)
@@ -25,19 +28,21 @@ class Book(models.Model):
         ]
 
 
-
-
-
 """Library model."""
 class Library(models.Model):
     name = models.CharField(max_length=50)
     book = models.ManyToManyField(Book, related_name="libraries")
+
+    def __str__(self):
+        return f"{self.name}"
 
 """ Librarian model."""
 class Librarian(models.Model):
     name = models.CharField(max_length=50)
     library = models.OneToOneField(Library, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.name}"
 
 
 class UserProfile(models.Model):
@@ -46,6 +51,29 @@ class UserProfile(models.Model):
     ("Librarian", "Librarian"),
     ("Member", "Member")
 ]
-    role = models.CharField(choices= role_choices, blank=False)
+    role = models.CharField(choices=role_choices, default="Member",  max_length=20)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
- 
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+
+# Signal to create or update UserProfile whenever a User is created
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
+
+
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(blank=True, null=True)
+    profile_photo = models.ImageField(blank=True, null=True)
+    
+class CustomUserManager(BaseUserManager):
+    def create_user(self):
+        date_of_birth = models.DateField(blank=True, null=True)
+        profile_photo = models.ImageField(blank=True, null=True) 
