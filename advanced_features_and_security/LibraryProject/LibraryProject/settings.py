@@ -25,6 +25,24 @@ SECRET_KEY = 'django-insecure-(hug-o48ntcrmv18m5f^44&&+8$kggh*wum38i3f8y3=f$$re8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Configuration for browser-side security settings.
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# To ensure cookies are set over over HTTPS only.
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# HTTP Strict Transport Security (HSTS) settings:
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = True
+HTTP_X_FORWARDED_PROTO = True
+SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for one year.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains.
+SECURE_HSTS_PRELOAD = True  # Enable HSTS preload; register your domain with browser vendors.
+
+
 ALLOWED_HOSTS = []
 
 
