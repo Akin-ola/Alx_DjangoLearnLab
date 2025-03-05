@@ -69,11 +69,3 @@ def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
 
-class CustomUser(AbstractUser):
-    date_of_birth = models.DateField(blank=True, null=True)
-    profile_photo = models.ImageField(blank=True, null=True)
-    
-class CustomUserManager(BaseUserManager):
-    def create_user(self):
-        date_of_birth = models.DateField(blank=True, null=True)
-        profile_photo = models.ImageField(blank=True, null=True) 

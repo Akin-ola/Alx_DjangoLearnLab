@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Library
 from .models import Book
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import permission_required, user_passes_test, login_required
 from django.contrib import messages
-from django.forms import BookForm
+from django.forms import Form as BookForm
 
 
 # Define a book list view with a simple function view
@@ -16,10 +16,10 @@ def list_books(request):
     return render(request, "relationship_app/list_books.html", context) 
 
 # Define a Library detail view with a class view
-class LibraryDetailView(DetailView):
+class LibraryDetailView(ListView):
     model = Library   #Specify the model
     name = "library"
-    template_name = 'relationship_app/library_detail.html'    #Specify the template
+    template_name = "relationship_app/library_detail.html"    #Specify the template
     
 
 # Need serious explanations
