@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Book, CustomUser
-from django.forms import ExampleForm
+from .forms import ExampleForm
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth import login, authenticate, hashers
 # Create your views here.
