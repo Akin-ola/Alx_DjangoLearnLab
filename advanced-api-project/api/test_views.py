@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
-from rest_framework import status, response.data
+from rest_framework import status, response, reverse
 from .models import Book
 
 # Create your tests here.
