@@ -11,8 +11,9 @@ from django_filters import rest_framework
 class ListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [rest_framework.DjangoFilterBackend]
+    filter_backends = [filters.OrderingFilter, rest_framework.DjangoFilterBackend,]
     filterset_fields = ['title', 'book__author']
+    ordering_fields = ['title', 'book__author']
 
     def get_queryset(self):
         queryset = Book.objects.all()
