@@ -1,32 +1,27 @@
 from django.shortcuts import render
 from .serializers import BookSerializer
 from .models import Book
-from rest_framework.generics import (
-    ListAPIView,
-    CreateAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
-    RetrieveAPIView
-)
+from rest_framework import generics
 
 # Create your views here.
 
-class BookListView(ListAPIView):
+class ListBookView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookRetrieveView(RetrieveAPIView):
+class DetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookCreateView(CreateAPIView):
+class CreateBookView(generics.CreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    # permission_classes = [_isauthenticated]
+
+class UpdateBookView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookUpdateView(UpdateAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-
-class BookDeleteView(DestroyAPIView):
+class DeleteBookView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
