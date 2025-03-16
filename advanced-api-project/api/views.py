@@ -5,7 +5,7 @@ from rest_framework import generics
 
 # Create your views here.
 
-class ListBookView(generics.ListAPIView):
+class ListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
@@ -13,15 +13,15 @@ class DetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class CreateBookView(generics.CreateAPIView):
+class CreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     # permission_classes = [_isauthenticated]
 
-class UpdateBookView(generics.UpdateAPIView):
+class UpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class DeleteBookView(generics.DestroyAPIView):
+class DeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
