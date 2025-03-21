@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from .models import Profile
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
-# Create your views here.
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
@@ -72,6 +72,6 @@ def edit_profile(request):
         form1 = UpdateProfileForm(instance=request.user.profile)
         forms = {
           'form': form,
-          'form1': form1,
+          'form1': form1
           }
         return render(request, 'blog/profile_edit.html', forms)
