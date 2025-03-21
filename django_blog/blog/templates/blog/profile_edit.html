@@ -1,0 +1,28 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head> 
+ <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="edit-profile">
+        <h3>Username</h3>
+        <input type="text" name="username" value="{{ user.username }}" maxlength="150" required="" id="id_username">
+        <h3>Bio</h3>
+        <input type="text" name="bio" value="{{ user.profile.bio }}" maxlength="400" id="id_bio">
+        <h3>Email</h3>
+        <input type="email" name="email" value="{{ user.email }}" maxlength="254" id="id_email">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+ <footer>
+        <p>&copy; 2024 Django Blog</p>
+    </footer>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

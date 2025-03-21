@@ -9,14 +9,17 @@ class Profile(models.Model):
     bio = models.CharField(max_length=255)
     profile_picture = models.ImageField()
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+    def __str__(self):
+        return f"Profile for {self.user.username}"
+    
+    class Meta:
+        verbose_name= 'Profile'
+        verbose_name_plural= 'Profiles'
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+def update_or_create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.get_or_create(user=instance)
     
 
 
