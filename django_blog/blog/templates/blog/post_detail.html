@@ -1,16 +1,16 @@
 {% extends "blog/base.html" %}
-{%block title%} Posts {%endblock%}
+{%block title%} Post Detail {%endblock%}
 {%load static%}
 {%block content%}
-    {%if all_post%}
-        {%for post in all_post%}
+    {%if post%}
+        
             <ul style="list-style: none;">
-                <li>Post Title: <a href="{%url 'post_detail' post.id%}">{{post.title}}</a> </li>
+                <li>Post Title:{{post.title}}</li>
                 <li>Post Content: {{post.content}}</li>
                 <li>Published Date: {{post.published_date}}</li>
                 <li>Author: {{post.author}}</li>
             </ul>
-            <hr>
-        {%endfor%}
+           
+        
     {%endif%}
 {%endblock%}

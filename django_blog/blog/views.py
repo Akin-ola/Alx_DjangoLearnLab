@@ -4,24 +4,54 @@ from django.contrib.auth import authenticate, login
 from .models import Profile, Post
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 
 class PostListView(ListView):
     model = Post
-    queryset = Post.objects.all()
+    template_name = 'blog/post_list.html'
+    context_object_name = 'all_post'
+    
+
+# def post_list_view(request):
+#     all_post = Post.objects.all()
+#     return render(request, 'blog/post_list.html', {'all_post': all_post} )
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'post_detail.html'
+    template_name = 'blog/post_detail.html'
+    context_object_name = 'post'
 
-class PostCreateView(CreateView):
-    model = Post
-    template_name = 'post_create.html'
-    form_class = CreateViewForm
+# def post_detail_view(request, pk):
+#     post = Post.objects.get(id=pk)
+#     if post:
+#         return render(request, 'blog/post_detail.html', {'post': post})
+#     return HttpResponse('Post doesn\'t exist')
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+
+
+# class PostCreateView(CreateView):
+#     model = Post
+#     template_name = 'post_create.html'
+#     form_class = CreateViewForm
+
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
+
+def post_create_view(request):
+    if request.method == 'POST':
+        form = CreateViewForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            print(post.title, post.content, post.request.user)
+            # Post.objects.create(title=post.title, content=post.content, author=request.user.id)
+            return redirect('posts')
+    form = CreateViewForm()
+    return render(request, 'blog/post_create.html', {'form': form})
+
+
+            
     
 
 class PostUpdateView(UpdateView):

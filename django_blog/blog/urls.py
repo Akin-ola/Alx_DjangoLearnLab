@@ -1,21 +1,23 @@
-from django.contrib.auth import views
+from django.contrib.auth import views as v
 from django.urls import path
 from .views import (
     register, edit_profile, profile_view,
-    PostCreateView, PostDetailView, PostListView, PostUpdateView, PostDeleteView
+    PostCreateView, PostUpdateView, PostDeleteView, PostListView, PostDetailView
 )
+from . import views
 
 urlpatterns = [
-    path('login/', views.LoginView.as_view(template_name='blog/login.html'), name='login_view'),
-    path('logout/', views.LogoutView.as_view(template_name='blog/logout.html'), name='logout_view'),
+    path('login/', v.LoginView.as_view(template_name='blog/login.html'), name='login_view'),
+    path('logout/', v.LogoutView.as_view(template_name='blog/logout.html'), name='logout_view'),
     path('register/', view=register, name='register_view'),
     path('profile/', view=profile_view, name='profile_view'),
-    path('profile/edit/', view=edit_profile, name='profile_edit')
-]
-urlpatterns = [
-    path('posts/', PostListView.as_view(), name='post_list'),
-    path('post/new/', PostCreateView.as_view(), name='post_create'),
-    path('post/<int:pk>/', PostDetailView.as_view(), name='post_details'),
+    path('profile/edit/', view=edit_profile, name='profile_edit'),
+    path('posts/', PostListView.as_view(), name='posts'),
+    # path('posts/', views.post_list_view, name='posts'),
+    # path('post/new/', PostCreateView.as_view(), name='post_create'),
+    path('post/new/', views.post_create_view, name='post_create'),
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+    # path('post/<int:pk>/', views.post_detail_view, name='post_detail'),
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
 ]
