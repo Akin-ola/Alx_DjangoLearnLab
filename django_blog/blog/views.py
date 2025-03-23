@@ -1,19 +1,37 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.contrib.auth.models import User
-from django import forms
+from .forms import RegisterForm, EditProfileForm, UpdateProfileForm, CreateViewForm, UpdateViewForm
 from django.contrib.auth import authenticate, login
-from .models import Profile
-from django.views.generic import DetailView
+from .models import Profile, Post
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 
 
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+class PostListView(ListView):
+    model = Post
+    queryset = Post.objects.all()
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'post_create.html'
+    form_class = CreateViewForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
     
-    class Meta:
-        model= User
-        fields= ('username', 'email', 'password1', 'password2')
+
+class PostUpdateView(UpdateView):
+    model = Post
+    template_name = 'post_update.html'
+    form_class = UpdateViewForm
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'post_delete.html'
 
 def register(request):
     if request.method == 'POST':
@@ -39,24 +57,6 @@ def profile_view(request):
         ...
     return render(request, 'blog/profile.html')
 
-    
-class EditProfileForm(UserChangeForm):
-
-    class Meta:
-        model = User
-        fields = (
-          'username',
-          'email',
-          )
-
-class UpdateProfileForm(forms.ModelForm):
-
-    class Meta:
-        model = Profile
-        fields = (
-          'bio',
-          'profile_picture',
-        )
 
 @login_required(login_url='login_view')
 def edit_profile(request):
@@ -75,3 +75,4 @@ def edit_profile(request):
           'form1': form1
           }
         return render(request, 'blog/profile_edit.html', forms)
+    
