@@ -1,12 +1,26 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, EditProfileForm, UpdateProfileForm, CreateViewForm, UpdateViewForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .models import Profile, Post
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.core.exceptions import ValidationError
 
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         login(request, user=request.user)
+#         return redirect(reverse_lazy('posts'))
+#     return render(request, 'blog/login.html')
+
+
+def logout_view(request):
+    if request.method == 'GET':
+        logout(request)
+        return render(request, 'blog/logout.html')
+    return render(request, 'blog/login.html')
 
 class PostListView(ListView):
     model = Post
@@ -44,14 +58,15 @@ class PostDetailView(DetailView):
 #         form.instance.user = self.request.user
 #         return super().form_valid(form)
 
-
+@login_required(login_url='login')
 def post_create_view(request):
     if request.method == 'POST':
         form = CreateViewForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            print(post.title, post.content, post.author)
-            # Post.objects.create(title=post.title, content=post.content, author=request.user.id)
+            if request.user != post.author:
+                raise ValidationError('Logged in user must be the author of the post.')
+            Post.objects.create(title=post.title, content=post.content, author=post.author)
             return redirect(reverse_lazy('posts'))
     form = CreateViewForm()
     return render(request, 'blog/post_create.html', {'form': form})

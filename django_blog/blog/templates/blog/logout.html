@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Django Blog{% endblock %}</title>
+{%extends "blog/base.html"%}
+{% load static %}
+<title>{% block title %}Django Blog{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -11,10 +8,10 @@
         {% block content %}
         <head>
             <meta charset="UTF-8">
-            <title>Logout</title>
+            <title>Logged out</title>
         </head>
         <body>
-            <h1>You have been logged out</h1>
+            <h1>You have been logged out.</h1>
             <a href="{% url 'login' %}">Login again</a>
         </body>
         {% endblock %}

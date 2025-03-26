@@ -4,7 +4,9 @@ from . import views
 
 urlpatterns = [
     path('login/', v.LoginView.as_view(template_name='blog/login.html'), name='login'),
-    path('logout/', v.LogoutView.as_view(template_name='blog/logout.html'), name='logout_view'),
+    # path('login/', views.login_view, name='login'),
+    # path('logout/', v.LogoutView.as_view(template_name='blog/logout.html'), name='logout'),
+    path('logout/', views.logout_view, name='logout'),
     path('register/', views.register, name='register'),
     path('profile/', views.profile_view, name='profile_view'),
     path('profile/edit/', views.edit_profile, name='profile_edit'),
