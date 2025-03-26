@@ -5,7 +5,6 @@ from .models import Profile, Post
 from django.core.exceptions import ValidationError
 
 class UpdateViewForm(forms.ModelForm):
-    update_date = forms.DateTimeField()
     class Meta:
         model = Post
         fields = ['title', 'content']
@@ -32,6 +31,9 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model= User
         fields= ('username', 'email', 'password1', 'password2')
+
+    def clean(self):
+        return super().clean()
 
 
 class EditProfileForm(UserChangeForm):

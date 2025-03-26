@@ -5,22 +5,27 @@ from .models import Profile, Post
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.urls import reverse_lazy
 
 
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'all_post'
+    ordering = '-published_date'
     
 
 # def post_list_view(request):
 #     all_post = Post.objects.all()
 #     return render(request, 'blog/post_list.html', {'all_post': all_post} )
 
+
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+
 
 # def post_detail_view(request, pk):
 #     post = Post.objects.get(id=pk)
@@ -32,36 +37,55 @@ class PostDetailView(DetailView):
 
 # class PostCreateView(CreateView):
 #     model = Post
-#     template_name = 'post_create.html'
+#     template_name = 'blog/post_create.html'
 #     form_class = CreateViewForm
 
 #     def form_valid(self, form):
 #         form.instance.user = self.request.user
 #         return super().form_valid(form)
 
+
 def post_create_view(request):
     if request.method == 'POST':
         form = CreateViewForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            print(post.title, post.content, post.request.user)
+            print(post.title, post.content, post.author)
             # Post.objects.create(title=post.title, content=post.content, author=request.user.id)
-            return redirect('posts')
+            return redirect(reverse_lazy('posts'))
     form = CreateViewForm()
     return render(request, 'blog/post_create.html', {'form': form})
 
 
-            
-    
 
 class PostUpdateView(UpdateView):
     model = Post
-    template_name = 'post_update.html'
+    template_name = 'blog/post_update.html'
     form_class = UpdateViewForm
 
-class PostDeleteView(DeleteView):
-    model = Post
-    template_name = 'post_delete.html'
+
+def update_post_view(request, pk):
+    post = Post.objects.get(id=pk)
+    if request.method == 'POST':
+        form = UpdateViewForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse_lazy('posts'))
+        
+    form = UpdateViewForm(instance=post)
+    return render(request, 'blog/post_update.html', {'form': form, 'post_id': pk})
+
+# class PostDeleteView(DeleteView):
+#     model = Post
+#     template_name = 'blog/post_delete.html'
+    
+
+def delete_post_view(request, pk):
+    post = Post.objects.get(id=pk)
+    if post:
+        post.delete()
+    return redirect(reverse_lazy('posts'))
+
 
 def register(request):
     if request.method == 'POST':
@@ -72,7 +96,7 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('login_view')
+            return redirect(reverse_lazy('posts'))
     else:
         form = RegisterForm()
     return render(request, 'blog/register.html', {'form': form })
@@ -81,7 +105,7 @@ def register(request):
 class ProfileView(DetailView):
     model = Profile
     
-@login_required(login_url='login_view')
+@login_required(login_url='login')
 def profile_view(request):
     if request.method == 'POST':
         ...

@@ -2,6 +2,7 @@
 {%block title%} Posts {%endblock%}
 {%load static%}
 {%block content%}
+{{user}}
     {%if all_post%}
         {%for post in all_post%}
             <ul style="list-style: none;">
@@ -10,6 +11,12 @@
                 <li>Published Date: {{post.published_date}}</li>
                 <li>Author: {{post.author}}</li>
             </ul>
+            {%if user.id == post.author.id%}
+                <button type="submit" style="background-color: yellow; color: black;">
+                    <a href="{%url 'post_update' post.id%}" >Edit Post</a> </button>
+                <button type="submit" style="background-color: red; color: black;"> 
+                    <a href="{%url 'post_delete' post.id%}" >Delete Post</a></button>
+            {%endif%}
             <hr>
         {%endfor%}
     {%endif%}

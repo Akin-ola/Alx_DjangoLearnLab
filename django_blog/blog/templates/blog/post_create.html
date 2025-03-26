@@ -3,6 +3,9 @@
 {%load static%}
 {%block content%}
         <form action="{%url 'post_create'%}" method="POST">
-            
+                {%csrf_token%}
+            {{form}}
+            <button type="submit">Submit</button>
         </form>
+
 {%endblock%}
