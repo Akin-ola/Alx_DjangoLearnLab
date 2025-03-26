@@ -1,0 +1,16 @@
+{% extends "blog/base.html" %}
+{%block title%} Posts {%endblock%}
+{%load static%}
+{%block content%}
+{{user}}
+    {%if comment %}
+        {%for c in comment%}
+            <ul style="list-style: none;">
+                <li>Comment Content: {{c.content}}</li>
+                <li>Created_at: {{c.created_at}}</li>
+                <li>Author: {{c.author}}</li>
+            </ul>
+            <hr>
+        {%endfor%}
+    {%endif%}
+{%endblock%}
