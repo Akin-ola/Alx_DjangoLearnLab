@@ -9,30 +9,49 @@ from django.urls import reverse_lazy
 from django.core.exceptions import ValidationError
 
 
-def comment_create_view(request,pk):
-    if request.method == 'POST':
-        form = forms.CommentCreateForm(request.POST, Comment.post.get_object(id=pk))
-        if form.is_valid():
-            form.save()
-            return redirect(reverse_lazy('posts'))
-    form = forms.CommentCreateForm()
-    return render(request, 'blog/comment_create.html', {'form': form})
+# def comment_create_view(request, post):
+#     if request.method == 'POST':
+#         post = Post.objects.get(id=post.id)
+#         form = forms.CommentCreateForm(request.POST, post)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(reverse_lazy('posts'))
+#     form = forms.CommentCreateForm()
+#     return render(request, 'blog/comment_create.html', {'form': form})
 
+
+class CommentCreateView(CreateView):
+    model  = Comment
+    template_name = 'blog/comment_create.html'
+    form_class = forms.CommentCreateForm
+    success_url = reverse_lazy('posts')
 
 def all_post_comment(request):
     comment = Comment.objects.all()
     return render(request, 'blog/post_comment.html', {'comment': comment})
     
 
-def comment_update_view(request, pk):
-    comment = Comment.objects.get(id=pk)
-    if request.method == 'POST':
-        form = forms.CommentUpdateForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse_lazy('post_comment'))
-    form = forms.CommentUpdateForm(instance=comment)
-    return render(request, 'blog/', {'form': form})
+# def comment_update_view(request, pk):
+#     comment = Comment.objects.get(id=pk)
+#     if request.method == 'POST':
+#         form = forms.CommentUpdateForm(request.POST, instance=comment)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(reverse_lazy('post_comment'))
+#     form = forms.CommentUpdateForm(instance=comment)
+#     return render(request, 'blog/', {'form': form})
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    template_name = 'blog/comment_update.html'
+    form_class = forms.CommentUpdateForm
+    success_url = reverse_lazy('posts')
+
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'blog/comment_delete.html'
+    
 
 
 # def login_view(request):
@@ -48,30 +67,34 @@ def logout_view(request):
         return render(request, 'blog/logout.html')
     return render(request, 'blog/login.html')
 
-class PostListView(ListView):
-    model = Post
-    template_name = 'blog/post_list.html'
-    context_object_name = 'all_post'
-    ordering = '-published_date'
+# class PostListView(ListView):
+#     model = Post
+#     template_name = 'blog/post_list.html'
+#     context_object_name = 'all_post'
+#     ordering = '-published_date'
     
 
-# def post_list_view(request):
-#     all_post = Post.objects.all()
-#     return render(request, 'blog/post_list.html', {'all_post': all_post} )
+def post_list_view(request):
+    all_post = Post.objects.all()
+
+    return render(request, 'blog/post_list.html', {'all_post': all_post})
 
 
 
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'blog/post_detail.html'
-    context_object_name = 'post'
+# class PostDetailView(DetailView):
+#     model = Post
+#     template_name = 'blog/post_detail.html'
+#     context_object_name = 'post'
 
 
-# def post_detail_view(request, pk):
-#     post = Post.objects.get(id=pk)
-#     if post:
-#         return render(request, 'blog/post_detail.html', {'post': post})
-#     return HttpResponse('Post doesn\'t exist')
+def post_detail_view(request, pk):
+    post_id = Post.objects.get(id=pk)
+    if post_id:
+        all_comments = Comment.objects.all()
+        if all_comments:
+            return render(request, 'blog/post_detail.html', {'post': post_id, 'all_comments': all_comments})
+        return render(request, 'blog/post_detail.html', {'post': post_id})
+    return HttpResponse('Post doesn\'t exist')
 
 
 
