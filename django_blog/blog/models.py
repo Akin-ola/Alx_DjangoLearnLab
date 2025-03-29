@@ -35,4 +35,8 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(max_length=255, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True)
+
+
+class Tag(models.Model):
+    name = models.ManyToManyField(Post)

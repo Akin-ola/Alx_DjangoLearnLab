@@ -1,13 +1,13 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile, Post, Comment
+from . import models
 from django.core.exceptions import ValidationError
 
 
 class CommentUpdateForm(forms.ModelForm):
     class Meta:
-        model = Comment
+        model = models.Comment
         fields = ['content']
     def clean(self):
         return super().clean()
@@ -15,7 +15,7 @@ class CommentUpdateForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = Comment
+        model = models.Comment
         fields = ['post', 'author', 'content']
     def clean(self):
         return super().clean()
@@ -23,7 +23,7 @@ class CommentForm(forms.ModelForm):
 
 class PostUpdateForm(forms.ModelForm):
     class Meta:
-        model = Post
+        model = models.Post
         fields = ['title', 'content']
     def clean(self):
         return super().clean()
@@ -31,7 +31,7 @@ class PostUpdateForm(forms.ModelForm):
 
 class PostCreateForm(forms.ModelForm):
     class Meta:
-        model = Post
+        model = models.Post
         fields = ['title', 'content', 'author']
     def clean(self):
         cleaned = super().clean()
@@ -58,5 +58,5 @@ class ProfileEditForm(UserChangeForm):
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = models.Profile
         fields = ('bio', 'profile_picture')
