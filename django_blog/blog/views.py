@@ -4,10 +4,18 @@ from django.contrib.auth import authenticate, login, logout
 from .models import Profile, Post, Comment
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.core.exceptions import ValidationError
 
+
+class CommentUserMixin(LoginRequiredMixin, UserPassesTestMixin):
+    def test(self):
+        return self.request.user == Post.comment.author
+    
+    def no_perm(self):
+        return HttpResponse('Only comment owner is allow to perform this operation')
 
 # def comment_create_view(request, post):
 #     if request.method == 'POST':
@@ -18,6 +26,8 @@ from django.core.exceptions import ValidationError
 #             return redirect(reverse_lazy('posts'))
 #     form = forms.CommentCreateForm()
 #     return render(request, 'blog/comment_create.html', {'form': form})
+
+
 
 
 class CommentCreateView(CreateView):
@@ -41,17 +51,17 @@ def all_post_comment(request):
 #     form = forms.CommentUpdateForm(instance=comment)
 #     return render(request, 'blog/', {'form': form})
 
-class CommentUpdateView(UpdateView):
+class CommentUpdateView(CommentUserMixin,UpdateView):
     model = Comment
     template_name = 'blog/comment_update.html'
     form_class = forms.CommentUpdateForm
     success_url = reverse_lazy('posts')
 
 
-class CommentDeleteView(DeleteView):
+class CommentDeleteView(CommentUserMixin, DeleteView):
     model = Comment
     template_name = 'blog/comment_delete.html'
-    
+
 
 
 # def login_view(request):
