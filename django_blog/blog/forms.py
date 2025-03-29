@@ -13,7 +13,7 @@ class CommentUpdateForm(forms.ModelForm):
         return super().clean()
 
 
-class CommentCreateForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['post', 'author', 'content']

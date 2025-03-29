@@ -33,7 +33,7 @@ class CommentUserMixin(LoginRequiredMixin, UserPassesTestMixin):
 class CommentCreateView(CreateView):
     model  = Comment
     template_name = 'blog/comment_create.html'
-    form_class = forms.CommentCreateForm
+    form_class = forms.CommentForm
     success_url = reverse_lazy('posts')
 
 def all_post_comment(request):
