@@ -22,7 +22,7 @@ urlpatterns = [
     path('post/<int:pk>/delete/', views.delete_post_view, name='post_delete'),
     path('comments/', views.all_post_comment, name='post_comment'),
     # path('comment/new/', views.comment_create_view, name='comment_create'),
-    path('post/<int:pk>/comment/new/', views.CommentCreateView.as_view(), name='comment_create'),
-    path('post/<int:pk>/comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
-    path('post/<int:pk>/comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
+    path('post/<int:pk>/comments/new/', views.CommentCreateView.as_view(), name='comment_create'),
+    path('post/<int:pk>/comments/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment_update'),
+    path('post/<int:pk>/comments/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
 ]
