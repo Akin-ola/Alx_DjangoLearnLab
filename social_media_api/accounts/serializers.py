@@ -5,5 +5,19 @@ from .models import CustomUser
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['bio', 'profile_picture', 'followers']
-        
+        fields = [
+            'id',
+            'username',
+            'password',
+            'email',
+            ]
+        write_only_fields = ('password',)
+        read_only_fields = ('id',)
+
+    def create(self, validated_data):
+        user = super(CustomUserSerializer, self).create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+ 

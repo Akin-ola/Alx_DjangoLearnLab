@@ -4,12 +4,17 @@ from django.urls import reverse_lazy
 from rest_framework import generics
 from .serializers import CustomUserSerializer
 from .models import CustomUser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 # Create your views here.
 
 
 class UserCreateView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
+
+
 
 # def register(request):
 #     if request.method == 'POST':
