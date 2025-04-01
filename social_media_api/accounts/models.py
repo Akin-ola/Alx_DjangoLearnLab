@@ -5,5 +5,5 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     bio = models.TextField(max_length=500)
-    pofile_picture = models.ImageField()
+    profile_picture = models.ImageField()
     followers = models.ManyToManyField('CustomUser', symmetrical=False)
