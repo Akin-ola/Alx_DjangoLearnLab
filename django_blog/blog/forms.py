@@ -1,13 +1,13 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from django.contrib.auth.models import User
-from . import models
+from .models import Comment, Post, Profile
 from django.core.exceptions import ValidationError
 
 
 class CommentUpdateForm(forms.ModelForm):
     class Meta:
-        model = models.Comment
+        model = Comment
         fields = ['content']
     def clean(self):
         return super().clean()
@@ -15,15 +15,15 @@ class CommentUpdateForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = models.Comment
-        fields = ['post', 'author', 'content']
+        model = Comment
+        fields = ['content']
     def clean(self):
         return super().clean()
     
 
 class PostUpdateForm(forms.ModelForm):
     class Meta:
-        model = models.Post
+        model = Post
         fields = ['title', 'content']
     def clean(self):
         return super().clean()
@@ -31,7 +31,7 @@ class PostUpdateForm(forms.ModelForm):
 
 class PostCreateForm(forms.ModelForm):
     class Meta:
-        model = models.Post
+        model = Post
         fields = ['title', 'content', 'author']
     def clean(self):
         cleaned = super().clean()
@@ -45,18 +45,18 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
     class Meta:
         model= User
-        fields= ('username', 'email', 'password1', 'password2')
+        fields= ['username', 'email', 'password1', 'password2']
     def clean(self):
         return super().clean()
 
 
-class ProfileEditForm(UserChangeForm):
+class ProfileEditForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ('username','email')
-        
+        model = Profile
+        fields = ['user', 'bio', 'profile_picture']
 
-class ProfileUpdateForm(forms.ModelForm):
+
+class ProfileForm(forms.ModelForm):
     class Meta:
-        model = models.Profile
-        fields = ('bio', 'profile_picture')
+        model = Profile
+        fields = ['bio', 'profile_picture']

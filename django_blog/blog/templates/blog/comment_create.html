@@ -2,7 +2,7 @@
 {%block title%} Comment {%endblock%}
 {%load static%}
 {%block content%}
-        <form action="{%url 'comment_create'%}" method="POST">
+        <form action="{%url 'comment_create' post_id%}" method="POST">
                 {%csrf_token%}
             {{form}}
             <button type="submit">Submit</button>

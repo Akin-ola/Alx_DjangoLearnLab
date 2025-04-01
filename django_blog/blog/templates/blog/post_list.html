@@ -11,10 +11,9 @@
                 <li>Published Date: {{post.published_date}}</li>
                 <li>Author: {{post.author}}</li>
             </ul>
-                <button type="submit" style="background-color: gainsboro; color: black;">
-                    <a href="{%url 'comment_create' %}" >Comment</a> </button>
-                <button type="submit" style="background-color: gainsboro; color: black;">
-                    <a href="{%url 'post_detail' post.id %}" >View Comment</a> </button>
+            <button type="submit" style="background-color: gainsboro; color: black;">
+                <a href="{%url 'post_detail' post.id %}" >Comment</a>
+            </button>
             {%if user.id == post.author.id%}
                 <button type="submit" style="background-color: yellow; color: black;">
                     <a href="{%url 'post_update' post.id%}" >Edit Post</a> </button>

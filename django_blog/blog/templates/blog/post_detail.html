@@ -4,19 +4,33 @@
 {%block content%}
     {%if post%}
         <ul style="list-style: none;">
-            <li>Post Title:{{post.title}}</li>
+            <li>Post Title: {{post.title}}</li>
             <li>Post Content: {{post.content}}</li>
             <li>Published Date: {{post.published_date}}</li>
             <li>Author: {{post.author}}</li>
-            <button type="button" style="background-color: blue; color: black;" > 
-            <a href="{%url 'post_comment' %}"> Comments </a></button>
         </ul>
-            {%if comment %}
-                <ul style="list-style: none;">
-                    <li>Comment Content: {{comment.content}}</li>
-                    <li>Created_at: {{comment.created_at}}</li>
-                    <li>Author: {{comment.author}}</li>
-                </ul>
-            {%endif%}
+        <br>
+        {%for comment in all_comments%}
+            <ul style="list-style: none;">
+                <li>Author: {{comment.author}}</li>
+                <li>Comment Content: {{comment.content}}</li>
+                <li>Created_at: {{comment.created_at}}</li> 
+            
+                {%if user.id == comment.author.id%}
+                    <a href="{%url 'comment_update' comment.id %}">
+                        <button type="submit" style="background-color: yellowgreen; color: white; cursor: pointer;" >Edit Comment</button>
+                    </a>
+                    <a href="{%url 'comment_delete' comment.id%}">
+                        <button type="submit" style="background-color: red; color: white; cursor: pointer;" >Delete Comment</button>
+                    </a>
+                {%endif%}
+            </ul>
+            <hr>
+        {%endfor%}
+        <form action="{%url 'comment_create' post.id %}" method="post">
+            {%csrf_token%}
+            {{form}}
+            <button type="submit" style="background-color: black; color: white; cursor: pointer;" >Add Comment</button>
+        </form>
     {%endif%}
 {%endblock%}
